@@ -29,6 +29,7 @@ class Token extends REST_Controller {
     $payload['id']    = $user['id'];
     $payload['name']  = $user['name'];
     $payload['email'] = $user['email'];
+    $payload['type']  = $user['type'];
     $payload['iat']   = $date->getTimestamp(); //waktu di buat
     $payload['exp']   = $date->getTimestamp() + 3600; //satu jam
 
@@ -36,18 +37,32 @@ class Token extends REST_Controller {
   }
 
   // authentikasi token untuk method request
-  public function authToken(){
+  public function authToken($admin_access = null){
     $token = $this->input->get_request_header('Authorization');
     $token = explode(" ", $token);
     $token = $token[1];
 
     try {
-      $decode = JWT::decode($token, $this->_secretkey,array('HS256'));
+      $decode = JWT::decode($token, $this->_secretkey, array('HS256'));
 
+      // ---- UNTUK AKSES UMUM ----
       // jika email pada token ada pada db
-      if ($this->user->getUser($decode->email)) {
-        return true;
+      if (!$admin_access) {
+        if ($this->user->getUser($decode->email)) {
+          return true;
+        }
       }
+
+      // ---- UNTUK AKSES ADMIN ----
+      if ($decode->type == 'admin') {
+        return true;
+      } else {
+        $this->response([
+            'status' => FALSE,
+            'message' => 'Akses ditolak, anda bukan admin',
+        ], 401);
+      }
+
     } catch (Exception $e) {
       exit('Token expired');
     }
