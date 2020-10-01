@@ -7,6 +7,7 @@ class User extends Token {
 
   public function __construct() {
     parent::__construct();
+    $this->load->library('form_validation');
   }
 
   public function login_post() {
@@ -14,24 +15,20 @@ class User extends Token {
     $email    = $this->post('email');
     $password = $this->post('password');
 
-    $form_error = [];
+    $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+    $this->form_validation->set_rules('password', 'Password', 'required');
 
-    // memeriksa apa form terisi
-    if ( empty($email) ) {
-      $form_error['email'] = 'Harus diisi';
-    }
-    if( empty($password) ) {
-      $form_error['password'] = 'Harus diisi';
-    }
-
-    // jika ada form input yang tidak lengkap
-    if ($form_error) {
+    // form validation false akan merespon input form yang false
+    if (!$this->form_validation->run()) {
+      $form_error = $this->form_validation->error_array();
       $this->response([
-        'status' => FALSE,
+        'status'  => FALSE,
         'message' => 'form tidak lengkap',
-        'form_error' => $form_error
+        'error'   => ['form_error' => $form_error]
       ], 404);
     }
+
+
 
     //  -------- AKAN DIEKSEKUSI JIKA FORM INPUT LENGKAP ------
 
@@ -55,19 +52,24 @@ class User extends Token {
       ], 404);
     }
 
-
     // menyiapkan token
     $token = parent::generateToken($user_detail);
 
-    // response 200 user berhasil masuk
-    $this->response([
-      'status' => TRUE,
+    // menyapkan response json
+    $response = [
+      'status'  => TRUE,
       'message' => 'berhasil login',
-      'name' => $user_detail['name'],
-      'email' => $user_detail['email'],
-      'user_role' => $user_detail['type'],
-      'token' => $token
-    ], 200);
+      'data'    => [
+                    'name' => $user_detail['name'],
+                    'email' => $user_detail['email'],
+                    'user_role' => $user_detail['type'],
+                    'token' => $token
+                  ]
+    ];
+
+    // response 200 user berhasil masuk
+    $this->response($response, 200);
   }
+  
 }
 ?>
