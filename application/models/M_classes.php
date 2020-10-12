@@ -64,4 +64,9 @@ class M_classes extends CI_Model
     {
         return $this->db->get('courses')->result_array();
     }
+
+    public function deleteClass($id) {
+      $this->db->delete('schedules', ['id' => $id]);
+      return $this->db->affected_rows('schedules');
+    }
 }

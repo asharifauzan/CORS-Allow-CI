@@ -66,3 +66,4 @@ $route['populate_form/add_class'] = 'populate_form/addClass';
 
 $route['class/all'] = 'classes';
 $route['class/add'] = 'classes/add';
+$route['class/delete/(:num)'] = 'classes/delete/$1';

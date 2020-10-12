@@ -97,6 +97,20 @@ class Classes extends Token {
     ], 200);
   }
 
+  public function delete_delete($id) {
+    if( !$this->m_classes->deleteClass($id) ) {
+      $this->response([
+        'status' => FALSE,
+        'message'  => 'cannot delete class'
+      ], 400);
+    }
+
+    $this->response([
+      'status' => TRUE,
+      'message'  => 'class succesfully deleted'
+    ], 200);
+  }
+
 
 }
 ?>
