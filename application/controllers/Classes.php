@@ -12,10 +12,20 @@ class Classes extends Token {
     $this->load->library('form_validation');
   }
 
-  public function index_get() {
+  public function index_get($id = null) {
     // mengambil seluruh kelas pada databse
-    $class = $this->m_classes->getClasses();
+    $class = $this->m_classes->getClasses($id);
 
+    // jika ada class tidak ada
+    if(!$class) {
+      $this->response([
+        'status' => FALSE,
+        'message' => 'Class not founded',
+        'data' => ($class)
+      ], 404);
+    }
+
+    // mengolah data $class
     for ($i=0; $i < count($class); $i++) {
       $students_id   = explode(',', $class[$i]['students_id']);
       $students_name = explode(',', $class[$i]['students_name']);
@@ -33,15 +43,12 @@ class Classes extends Token {
     // memberikan response sukses dan mengirim daftar kelas
     $this->response([
       'status' => TRUE,
-      'message' => 'success',
+      'message' => 'Success fetch class',
       'data' => ($class)
     ], 400);
   }
 
   public function add_post() {
-    // var_dump(count($this->post('mahasiswa')));
-    // die;
-
     // -----MEMBUAT JADWAL PADA TABLE schedules-----
     $schedule = [
                   'day'         => $this->post('hari'), //schedules.day
@@ -91,6 +98,7 @@ class Classes extends Token {
 
     }
 
+    // response berhasil jika semua data telah diinsert
     $this->response([
       'status' => TRUE,
       'message'  => 'class succesfully added'
@@ -98,6 +106,7 @@ class Classes extends Token {
   }
 
   public function delete_delete($id) {
+    // jika data tidak berhasil dihapus
     if( !$this->m_classes->deleteClass($id) ) {
       $this->response([
         'status' => FALSE,
@@ -105,6 +114,7 @@ class Classes extends Token {
       ], 400);
     }
 
+    // response data ketika class berhasil dihapus
     $this->response([
       'status' => TRUE,
       'message'  => 'class succesfully deleted'

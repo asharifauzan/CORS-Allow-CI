@@ -6,7 +6,7 @@ class M_classes extends CI_Model
 {
     private $_tblname = 'class';
 
-    public function getClasses()
+    public function getClasses($id = null)
     {
         $this->db->select(['class.id', 'class.className as kelas',
                        'GROUP_CONCAT(users.id) as students_id',
@@ -19,6 +19,14 @@ class M_classes extends CI_Model
              ->join('schedules', 'class.id_schedule = schedules.id')
              ->join('courses', 'schedules.id_courses = courses.code')
              ->group_by('class.id');
+
+        // mengambil class dengan id tertentu
+         if ($id) {
+           $this->db->where(['class.id' => $id]);
+           return $this->db->get()->result_array();
+         }
+
+        // mengambil semua class
         return $this->db->get()->result_array();
     }
 
