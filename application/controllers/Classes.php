@@ -121,6 +121,41 @@ class Classes extends Token {
     ], 200);
   }
 
+  public function update_put($id) {
+    // menangkap form schedules
+    $schedule = [
+                  'day'         => $this->put('hari'), //schedules.day
+                  'id_courses'  => $this->put('mata_kuliah'), //schedules.id_courses
+                  'id_lecturer' => $this->put('dosen') //schedules.id_lecturer
+                ];
+
+    // menangkap form class
+    $class = [
+      'className'    => $this->put('nama_kelas'),
+      'active'       => $this->put('active')
+    ];
+
+    // menangkap form students
+    $student = $this->put('mahasiswa');
+
+
+    // jika class tidak terinsert
+    if( !$this->m_classes->updateClass($id, $schedule, $class, $student) ) {
+      $this->response([
+        'status' => FALSE,
+        'message' => 'failed to updated class'
+      ], 400);
+    };
+
+    // response berhasil jika semua data telah diinsert
+    $this->response([
+      'status' => TRUE,
+      'message'  => 'class succesfully updated'
+    ], 200);
+
+
+  }
+
 
 }
 ?>

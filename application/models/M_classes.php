@@ -73,8 +73,48 @@ class M_classes extends CI_Model
         return $this->db->get('courses')->result_array();
     }
 
-    public function deleteClass($id) {
-      $this->db->delete('schedules', ['id' => $id]);
-      return $this->db->affected_rows('schedules');
+    public function deleteClass($id)
+    {
+        $this->db->delete('schedules', ['id' => $id]);
+        return $this->db->affected_rows('schedules');
+    }
+
+    public function updateClass($id, $schedule = NULL, $class = NULL, $student)
+    {
+      $return;
+
+      // ----- UPDATE TABLE schedules -----
+      if ($schedule) {
+        $day         = $schedule['day'];
+        $id_lecturer = $schedule['id_lecturer'];
+        $id_courses  = $schedule['id_courses'];
+
+        $sql =
+        "UPDATE schedules
+        JOIN class ON class.id_schedule = schedules.id
+        SET day = '$day', id_courses = $id_courses, id_lecturer = $id_lecturer
+        WHERE class.id = $id";
+
+        $this->db->query($sql);
+      }
+
+      // ----- UPDATE TABLE class ------
+      if ($class) {
+        $this->db->update('class', $class, ['id' => $id]);
+      }
+
+      // ----- UPDATE TABLE students -----
+      if ($student) {
+        if( $this->db->get_where('students', ['id_class' => $id])->num_rows() ) {
+          $this->db->delete('students', ['id_class' => $id]);
+        }
+
+        foreach ($student as $st) {
+          $this->db->insert('students', ['id_user' => $st, 'id_class'=>$id]);
+        }
+      }
+
+      // jika berhasil mengubah class
+      return TRUE;
     }
 }

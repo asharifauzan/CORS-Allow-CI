@@ -68,3 +68,4 @@ $route['class/all'] = 'classes';
 $route['class/(:num)'] = 'classes/$1';
 $route['class/add'] = 'classes/add';
 $route['class/delete/(:num)'] = 'classes/delete/$1';
+$route['class/update/(:num)'] = 'classes/update/$1';
