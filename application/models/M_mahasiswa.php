@@ -4,19 +4,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class M_mahasiswa extends CI_Model {
 
   public function getMahasiswa($id) {
+    $this->db->select('users.*')
+    ->from('users')
+    ->join('user_type', 'user_type.id = users.id_type')
+    ->where('user_type.type', 'mahasiswa');
+
+    // get all mahasiswa
     if(!$id) {
-      return $this->db->select('users.*')
-                      ->from('users')
-                      ->join('user_type', 'user_type.id = users.id_type')
-                      ->where('user_type.type', 'mahasiswa')
-                      ->get()->result_array();
+      return $this->db->get()->result_array();
     }
 
-    return $this->db->select('users.*')
-                    ->from('users')
-                    ->join('user_type', 'user_type.id = users.id_type')
-                    ->where('user_type.type', 'mahasiswa')
-                    ->where('users.id', $id)
+    // get mahasiswa by id
+    return $this->db->where('users.id', $id)
                     ->get()->result_array();
   }
 

@@ -7,7 +7,7 @@ class Mahasiswa extends Token {
 
   public function __construct() {
     parent::__construct();
-    parent::authToken($admin_access = true);
+    parent::authToken();
     $this->load->model('M_mahasiswa', 'mhs');
     $this->load->library('form_validation');
     $this->load->helper('string');
