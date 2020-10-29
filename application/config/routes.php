@@ -64,8 +64,5 @@ $route['api/example/users/(:num)(\.)([a-zA-Z0-9_-]+)(.*)'] = 'api/example/users/
 // customiz URL
 $route['populate_form/add_class'] = 'populate_form/addClass';
 
-$route['class/all'] = 'classes';
+$route['class']        = 'classes';
 $route['class/(:num)'] = 'classes/$1';
-$route['class/add'] = 'classes/add';
-$route['class/delete/(:num)'] = 'classes/delete/$1';
-$route['class/update/(:num)'] = 'classes/update/$1';

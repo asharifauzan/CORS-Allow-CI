@@ -20,7 +20,7 @@ class M_classes extends CI_Model
              ->join('courses', 'schedules.id_courses = courses.code')
              ->group_by('class.id');
 
-        // mengambil class dengan id tertentu
+        // mengambil class dengan id
          if ($id) {
            $this->db->where(['class.id' => $id]);
            return $this->db->get()->result_array();
@@ -30,20 +30,23 @@ class M_classes extends CI_Model
         return $this->db->get()->result_array();
     }
 
-    public function addSchedule($data)
+    public function addClass($schedule, $class, $student)
     {
-        $this->db->insert('schedules', $data);
-        return $this->db->affected_rows('schedules');
-    }
+        $this->db->insert('schedules', $schedule);
 
-    public function addClass($data)
-    {
-        return $this->db->insert('class', $data);
+        $class['id_schedule'] = $this->lastOfScheduleId()['id'];
+        $this->db->insert('class', $class);
+
+        foreach ($student as $st) {
+          $this->db->insert('students', ['id_user' => $st, 'id_class' => $this->lastOfClassId()['id']]);
+        }
+
+        return $this->db->affected_rows();
     }
 
     public function lastOfScheduleId()
     {
-        // mengambil id dari data yang terakhir diinsert
+        // mengambil schedule.id terakhir
         $this->db->select('id')
            ->order_by('id', 'desc')
            ->limit(1);
@@ -52,15 +55,11 @@ class M_classes extends CI_Model
 
     public function lastOfClassId()
     {
-        // mengambil id dari data yang terakhir diinsert
+        // mengambil class.id terakhir
         $this->db->select('id')
            ->order_by('id', 'desc')
            ->limit(1);
         return $this->db->get($this->_tblname)->row_array();
-    }
-
-    public function addStudent($student) {
-      return $this->db->insert('students', $student);
     }
 
     public function allClass()
@@ -81,8 +80,6 @@ class M_classes extends CI_Model
 
     public function updateClass($id, $schedule = NULL, $class = NULL, $student)
     {
-      $return;
-
       // ----- UPDATE TABLE schedules -----
       if ($schedule) {
         $day         = $schedule['day'];
@@ -115,6 +112,6 @@ class M_classes extends CI_Model
       }
 
       // jika berhasil mengubah class
-      return TRUE;
+      return $this->db->affected_rows();
     }
 }
