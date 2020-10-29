@@ -44,34 +44,6 @@ class M_classes extends CI_Model
         return $this->db->affected_rows();
     }
 
-    public function lastOfScheduleId()
-    {
-        // mengambil schedule.id terakhir
-        $this->db->select('id')
-           ->order_by('id', 'desc')
-           ->limit(1);
-        return $this->db->get('schedules')->row_array();
-    }
-
-    public function lastOfClassId()
-    {
-        // mengambil class.id terakhir
-        $this->db->select('id')
-           ->order_by('id', 'desc')
-           ->limit(1);
-        return $this->db->get($this->_tblname)->row_array();
-    }
-
-    public function allClass()
-    {
-        return $this->db->get($this->_tblname)->result_array();
-    }
-
-    public function allCourses()
-    {
-        return $this->db->get('courses')->result_array();
-    }
-
     public function deleteClass($id)
     {
         $this->db->delete('schedules', ['id' => $id]);
@@ -114,4 +86,23 @@ class M_classes extends CI_Model
       // jika berhasil mengubah class
       return $this->db->affected_rows();
     }
+
+    public function lastOfScheduleId()
+    {
+      // mengambil schedule.id terakhir
+      $this->db->select('id')
+      ->order_by('id', 'desc')
+      ->limit(1);
+      return $this->db->get('schedules')->row_array();
+    }
+
+    public function lastOfClassId()
+    {
+      // mengambil class.id terakhir
+      $this->db->select('id')
+      ->order_by('id', 'desc')
+      ->limit(1);
+      return $this->db->get($this->_tblname)->row_array();
+    }
+
 }
