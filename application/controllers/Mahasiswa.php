@@ -8,31 +8,31 @@ class Mahasiswa extends Token {
   public function __construct() {
     parent::__construct();
     parent::authToken();
-    $this->load->model('M_mahasiswa', 'mhs');
+    $this->load->model('M_users', 'user');
     $this->load->library('form_validation');
     $this->load->helper('string');
   }
 
-  public function index_get($id = null) {
-    $data = $this->mhs->getMahasiswa($id);
+  public function index_get($role, $id = null) {
+    $data = $this->user->getUserByRole($role, $id);
 
     // data gagal diambil
     if(!$data) {
       $this->response([
         'status' => FALSE,
-        'message' => 'Failed to get mahasiswa',
+        'message' => "Failed to get $role",
       ], 404);
     }
 
     // mereturn data jika sukses
     $this->response([
       'status' => TRUE,
-      'message' => 'Success get mahasiswa',
+      'message' => "Success get $role",
       'data' => $data
     ], 200);
   }
 
-  public function index_post() {
+  public function index_post($role) {
     // set rules validation
     $this->form_validation->set_rules('name', 'Name', 'required');
     $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
@@ -61,21 +61,22 @@ class Mahasiswa extends Token {
       'address'   => $this->post('address'),
       'gender'    => $this->post('gender'),
       'picture'   => $this->do_upload(),
-      'id_type'   => $this->mhs->getIdType(),
+      'id_type'   => $this->user->getIdType($role),
     ];
 
+
     // jika query addMahasiswa gagal
-    if( !$this->mhs->addMahasiswa($data) ) {
+    if( !$this->user->addUser($data) ) {
       $this->response([
         'status' => FALSE,
-        'message' => 'Gagal menambah mahasiswa'
+        'message' => "Gagal menambah $role"
       ], 400);
     }
 
     // sukses menambah mahasiswa
     $this->response([
       'status' => TRUE,
-      'message' => 'succesfully added new mahasiswa'
+      'message' => "succesfully added new $role"
     ], 200);
   }
 
@@ -103,21 +104,23 @@ class Mahasiswa extends Token {
     return $this->upload->data()['file_name'];
   }
 
-  public function index_delete($id) {
+  public function index_delete($role, $id) {
     // jika data tidak berhasil dihapus
-    if( !$this->mhs->deleteMahasiswa($id) ) {
+    if( !$this->user->deleteUser($id) ) {
       $this->response([
         'status' => FALSE,
-        'message'  => 'cannot delete mahasiswa'
+        'message'  => "cannot delete $role"
       ], 400);
     }
 
     // response data ketika class berhasil dihapus
     $this->response([
       'status' => TRUE,
-      'message'  => 'mahasiswa succesfully deleted'
+      'message'  => "$role succesfully deleted"
     ], 200);
   }
+
+  
 
 }
 ?>
