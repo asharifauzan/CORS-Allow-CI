@@ -67,5 +67,6 @@ $route['populate_form/add_class'] = 'populate_form/addClass';
 $route['class']        = 'classes';
 $route['class/(:num)'] = 'classes/$1';
 
-$route['(:any)']        = 'mahasiswa/$1';
-$route['(:any)/(:num)'] = 'mahasiswa/$1/$2';
+$route['(:any)']                = 'users/$1';
+$route['(:any)/(:num)']['POST'] = 'users/update/$1/$2';
+$route['(:any)/(:num)']['GET']  = 'users/$1/$2';

@@ -42,5 +42,10 @@ class M_users extends CI_Model {
     return $this->db->delete('users', ['id' => $id]);
   }
 
+  public function updateUser($id, $data) {
+    $this->db->update('users', $data, ['id' => $id]);
+    return $this->db->affected_rows();
+  }
+
 }
 ?>
