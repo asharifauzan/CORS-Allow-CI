@@ -3,7 +3,7 @@ require APPPATH . 'controllers/api/Token.php';
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class User extends Token {
+class Auth extends Token {
 
   public function __construct() {
     parent::__construct();
@@ -70,6 +70,6 @@ class User extends Token {
     // response 200 user berhasil masuk
     $this->response($response, 200);
   }
-  
+
 }
 ?>

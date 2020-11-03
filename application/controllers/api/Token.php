@@ -16,13 +16,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Token extends REST_Controller {
 
   private $_secretkey = 'elearning';
+  private $_token;
 
   public function __construct(){
     parent::__construct();
     $this->load->model('m_users', 'user');
   }
 
-  // menyiapkan token
+  public function getToken() {
+    return $this->_token;
+  }
+
   public function generateToken($user){
     $date = new DateTime();
 
@@ -33,39 +37,51 @@ class Token extends REST_Controller {
     $payload['iat']   = $date->getTimestamp(); //waktu di buat
     $payload['exp']   = $date->getTimestamp() + 3600; //satu jam
 
-    return $token = JWT::encode($payload, $this->_secretkey);
+    return $this->_token = JWT::encode($payload, $this->_secretkey);
   }
 
-  // authentikasi token untuk method request
   public function authToken($admin_access = null){
-    $token = $this->input->get_request_header('Authorization');
-    $token = explode(" ", $token);
-    $token = $token[1];
+    // mengambil bearer token
+    $this->_token = $this->input->get_request_header('Authorization');
+    $this->_token = explode(" ", $this->_token);
+
+    // jika token tidak disertakan
+    if (count($this->_token) == 1) {
+      $this->response([
+        'status' => FALSE,
+        'message' => 'Masukkan token',
+      ], 401);
+    }
 
     try {
-      $decode = JWT::decode($token, $this->_secretkey, array('HS256'));
 
-      // ---- UNTUK AKSES UMUM ----
-      // jika email pada token ada pada db
-      if (!$admin_access) {
-        if ($this->user->getUser($decode->email)) {
-          return true;
-        }
-      }
+      $decode = $this->decodeToken($this->_token[1]);
 
       // ---- UNTUK AKSES ADMIN ----
-      if ($decode->type == 'admin') {
-        return true;
-      } else {
+      // jika user_role != admin mencoba masuk halamman admin only
+      if ($admin_access === TRUE && $decode->type != 'admin') {
         $this->response([
-            'status' => FALSE,
-            'message' => 'Akses ditolak, anda bukan admin',
+          'status' => FALSE,
+          'message' => 'Akses ditolak, anda bukan admin',
+        ], 401);
+      }
+
+      // ---- AKSES UMUM LONCAT KESINI ----
+      // jika token tidak menemukan user
+      if (!$this->user->getUser($decode->email)) {
+        $this->response([
+          'status' => FALSE,
+          'message' => 'Token tidak valid',
         ], 401);
       }
 
     } catch (Exception $e) {
       exit('Token expired');
     }
+  }
+
+  public function decodeToken($token) {
+    return $decode = JWT::decode($token, $this->_secretkey, array('HS256'));
   }
 }
 
