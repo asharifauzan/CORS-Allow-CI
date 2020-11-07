@@ -81,7 +81,7 @@ class Token extends REST_Controller {
   }
 
   public function decodeToken($token) {
-    return $decode = JWT::decode($token, $this->_secretkey, array('HS256'));
+    return JWT::decode($token, $this->_secretkey, array('HS256'));
   }
 }
 

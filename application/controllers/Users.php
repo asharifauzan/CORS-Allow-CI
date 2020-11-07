@@ -155,6 +155,20 @@ class Users extends Token {
       $data['picture'] = $this->do_upload();
     }
 
+    // ---KHUSUS DOSEN & ADMIN ---
+    // validasi memastikan user yang
+    // akan diupdate adalah dirinya
+    $user_token = parent::getToken()[1];
+    $user       = parent::decodeToken($user_token);
+    if (!$user->type == 'admin') {
+      if ($user->id !== $id) {
+        $this->response([
+          'status' => FALSE,
+          'message' => "Gagal update $role"
+        ], 400);
+      }
+    }
+
     // jika query updateUser gagal
     if( !$this->user->updateUser($id, $data) ) {
       $this->response([
