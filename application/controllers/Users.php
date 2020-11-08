@@ -160,8 +160,8 @@ class Users extends Token {
     // akan diupdate adalah dirinya
     $user_token = parent::getToken()[1];
     $user       = parent::decodeToken($user_token);
-    if (!$user->type == 'admin') {
-      if ($user->id !== $id) {
+    if ($user->type !== 'admin') {
+      if ($user->id !== $id OR $user->type !== $role) {
         $this->response([
           'status' => FALSE,
           'message' => "Gagal update $role"
