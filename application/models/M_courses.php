@@ -12,5 +12,10 @@ class M_courses extends CI_Model {
     return $this->db->affected_rows();
   }
 
+  public function deleteCourse($id) {
+    $this->db->delete('courses', ['code' => $id]);
+    return $this->db->affected_rows();
+  }
+
 }
 ?>

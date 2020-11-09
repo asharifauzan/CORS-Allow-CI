@@ -64,5 +64,21 @@ class Courses extends Token {
     ], 200);
   }
 
+  public function index_delete($id) {
+    // jika gagal delete course
+    if ( !$this->m_courses->deleteCourse($id) ) {
+      $this->response([
+        'status' => FALSE,
+        'message' => 'Failed to delete course'
+      ], 400);
+    }
+
+    // berhasil delete courses
+    $this->response([
+      'status' => TRUE,
+      'message' => 'Succesfully delete course'
+    ], 200);
+  }
+
 }
 ?>
