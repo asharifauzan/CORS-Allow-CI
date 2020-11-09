@@ -7,5 +7,10 @@ class M_courses extends CI_Model {
     return $this->db->get('courses')->result_array();
   }
 
+  public function addCourse($data) {
+    $this->db->insert('courses', $data);
+    return $this->db->affected_rows();
+  }
+
 }
 ?>

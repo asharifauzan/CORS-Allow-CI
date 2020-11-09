@@ -30,5 +30,39 @@ class Courses extends Token {
     ], 200);
   }
 
+  public function index_post() {
+    $this->form_validation->set_rules('name', 'Name', 'required');
+
+    // jika form validation tidak jalan
+    if ( !$this->form_validation->run() ) {
+      $form_error = $this->form_validation->error_array();
+      $this->response([
+        'status' => FALSE,
+        'message' => 'form tidak lengkap',
+        'error' => ['form_error' => $form_error]
+      ], 400);
+    }
+
+    // menangkap form add
+    $data = [
+      'code' => $this->post('code'),
+      'name' => $this->post('name')
+    ];
+
+    // jika gagal add course
+    if (!$this->m_courses->addCourse($data)) {
+      $this->response([
+        'status' => FALSE,
+        'message' => 'Failed to add course'
+      ], 400);
+    }
+
+    // berhasil add course
+    $this->response([
+      'status' => TRUE,
+      'message' => 'Succesfully add new course'
+    ], 200);
+  }
+
 }
 ?>
