@@ -6,10 +6,10 @@ class M_users extends CI_Model {
   private $_tblname = 'users';
 
   public function getUser($email) {
-    $this->db->select('users.id, users.name, users.email, users.password, user_type.type');
-    $this->db->from($this->_tblname);
-    $this->db->join('user_type', 'users.id_type = user_type.id');
-    $this->db->where(['email' => $email]);
+    $this->db->select('users.id, users.name, users.email, users.password, user_type.type')
+             ->from($this->_tblname)
+             ->join('user_type', 'users.id_type = user_type.id')
+             ->where(['email' => $email]);
     return $this->db->get()->row_array();
   }
 
