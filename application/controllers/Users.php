@@ -13,8 +13,20 @@ class Users extends Token {
     $this->load->helper('string');
   }
 
-  public function index_get($role, $id = null) {
-    $data = $this->user->getUserByRole($role, $id);
+  public function index_get($role, $id = null, $course = null) {
+    switch ($course) {
+      case 'courses':
+        $data = $this->user->getUserCourses($id);
+        break;
+      case null:
+      $data = $this->user->getUserByRole($role, $id);
+        break;
+      default:
+        $this->response([
+          'status'  => FALSE,
+          'message' => 'Method not allowed'
+        ], 404);
+    }
 
     // data gagal diambil
     if(!$data) {
@@ -183,61 +195,7 @@ class Users extends Token {
       'message' => "succesfully update $role"
     ], 200);
 
-
   }
-
-  // public function index_put($role, $id) {
-  //   var_dump($this->post('email'));
-  //   var_dump($this->put('email'));
-  //   // echo "string";
-  //   die();
-  //   // set rules validation
-  //   // $this->form_validation->set_rules('name', 'name', 'required');
-  //   // $this->form_validation->set_rules('email', 'email', 'required|valid_email');
-  //   // $this->form_validation->set_rules('password', 'password', 'required');
-  //   // $this->form_validation->set_rules('phone', 'phone', 'required|numeric');
-  //   // $this->form_validation->set_rules('gender', 'gender', 'required|numeric');
-  //   //
-  //   // // jika form validation tidak terpenuhi
-  //   // if( !$this->form_validation->run() ) {
-  //   //   $form_error = $this->form_validation->error_array();
-  //   //   $this->response([
-  //   //     'status'  => false,
-  //   //     'message' => 'form tidak lengkap',
-  //   //     'error'   => ['form_error' => $form_error]
-  //   //   ], 404);
-  //   // }
-  //
-  //   // form validation berhasil
-  //   // menyimpan data yang ditangkap
-  //   $data = [
-  //     'name'      => $this->post('name'),
-  //     'email'     => $this->post('email'),
-  //     'password'  => password_hash( $this->post('password'), password_default ),
-  //     'birthday'  => $this->post('birthday'),
-  //     'phone'     => $this->post('phone'),
-  //     'address'   => $this->post('address'),
-  //     'gender'    => $this->post('gender'),
-  //     'picture'   => $this->do_upload(),
-  //   ];
-  //
-  //
-  //   // jika query updateUser gagal
-  //   if( !$this->user->updateUser($id, $data) ) {
-  //     $this->response([
-  //       'status' => FALSE,
-  //       'message' => "Gagal update $role"
-  //     ], 400);
-  //   }
-  //
-  //   // sukses update user
-  //   $this->response([
-  //     'status' => TRUE,
-  //     'message' => "succesfully update $role"
-  //   ], 200);
-  //
-  //
-  // }
 
 }
 ?>

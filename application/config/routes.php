@@ -73,3 +73,4 @@ $route['courses/(:num)'] = 'courses/$1';
 $route['(:any)']                = 'users/$1';
 $route['(:any)/(:num)']['POST'] = 'users/update/$1/$2';
 $route['(:any)/(:num)']['GET']  = 'users/$1/$2';
+$route['(:any)/(:num)/(:any)']  = 'users/$1/$2/$3';
