@@ -7,7 +7,7 @@ class Courses extends Token {
 
   public function __construct() {
     parent::__construct();
-    parent::authToken();
+    parent::authToken($admin_access = true);
     $this->load->model('m_courses');
     $this->load->library('form_validation');
   }
