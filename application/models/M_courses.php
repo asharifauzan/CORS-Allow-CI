@@ -17,5 +17,10 @@ class M_courses extends CI_Model {
     return $this->db->affected_rows();
   }
 
+  public function updateCourse($id, $data) {
+    $this->db->update('courses', $data, ['code' => $id]);
+    return $this->db->affected_rows();
+  }
+
 }
 ?>

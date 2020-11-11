@@ -80,5 +80,41 @@ class Courses extends Token {
     ], 200);
   }
 
+  public function index_put($id) {
+    // data dari method PUT yg ingin divalidasi
+    $set_data['name'] = $this->put('name');
+    $this->form_validation->set_data($set_data);
+
+    $this->form_validation->set_rules('name', 'Name', 'required');
+
+    if ( !$this->form_validation->run() ) {
+      $form_error = $this->form_validation->error_array();
+      $this->response([
+        'status' => FALSE,
+        'message' => 'form tidak lengkap',
+        'error' => ['form_error' => $form_error]
+      ], 400);
+    }
+
+    // menangkap form update
+    $data = [
+      'name' => $this->put('name')
+    ];
+
+    // jika gagal update course
+    if (!$this->m_courses->updateCourse($id, $data)) {
+      $this->response([
+        'status' => FALSE,
+        'message' => 'Failed to update course'
+      ], 400);
+    }
+
+    // berhasil update course
+    $this->response([
+      'status' => TRUE,
+      'message' => 'Succesfully update course'
+    ], 200);
+  }
+
 }
 ?>
