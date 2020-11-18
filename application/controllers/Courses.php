@@ -12,8 +12,8 @@ class Courses extends Token {
     $this->load->library('form_validation');
   }
 
-  public function index_get() {
-    $courses = $this->m_courses->getCourses();
+  public function index_get($id = NULL) {
+    $courses = $this->m_courses->getCourses($id);
 
     // jika course tidak ada
     if (!$courses) {
