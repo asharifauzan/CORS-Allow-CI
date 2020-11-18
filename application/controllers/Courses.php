@@ -7,9 +7,17 @@ class Courses extends Token {
 
   public function __construct() {
     parent::__construct();
-    parent::authToken($admin_access = true);
+    $this->roleValidation();
     $this->load->model('m_courses');
     $this->load->library('form_validation');
+  }
+
+  public function roleValidation() {
+    if($_SERVER['REQUEST_METHOD'] != 'GET') {
+      parent::authToken($admin_access = true);
+    } else {
+      parent::authToken();
+    }
   }
 
   public function index_get($id = NULL) {
