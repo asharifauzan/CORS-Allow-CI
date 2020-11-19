@@ -1,0 +1,15 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class M_matters extends CI_Model {
+
+  public function getMatters($id) {
+    if($id) {
+      return $this->db->get_where('matters', ['id' => $id])->result_array();
+    }
+    return $this->db->get('matters')->result_array();
+  }
+
+}
+
+?>
