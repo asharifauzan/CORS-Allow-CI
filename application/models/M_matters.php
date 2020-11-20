@@ -20,6 +20,10 @@ class M_matters extends CI_Model {
     return $this->db->affected_rows();
   }
 
+  public function updateMatter($data, $id) {
+    $this->db->update('matters', $data, ['id' => $id]);
+    return $this->db->affected_rows();
+  }
 }
 
 ?>

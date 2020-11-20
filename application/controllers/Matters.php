@@ -102,6 +102,51 @@ class Matters extends Token {
       'message' => 'Succesfully deleted matter'
     ]);
   }
+
+  public function update_post($id) {
+    $this->form_validation->set_rules('title', 'Title', 'required');
+    $this->form_validation->set_rules('description', 'Description', 'required');
+    $this->form_validation->set_rules('id_schedules', 'ID_Schedules', 'required');
+
+    // jika form validation gagal
+    if ( !$this->form_validation->run() ) {
+      $form_error = $this->form_validation->error_array();
+      $this->response([
+        'status' => FALSE,
+        'message' => 'form tidak lengkap',
+        'error' => ['form_error' => $form_error]
+      ]);
+    }
+
+    // FORM VALIDATION BERHASIL
+    // mengambil form data
+    $data = [
+      'title'        => $this->post('title'),
+      'description'  => $this->post('description'),
+      'id_schedules' => $this->post('id_schedules'),
+    ];
+
+    // jika filename ikut dirubah
+    if ($_FILES) {
+      $data['filename'] = $this->do_upload();
+    }
+
+    // jika gagal update matter
+    if ( !$this->m_matters->updateMatter($data, $id) ) {
+      $this->response([
+        'status' => FALSE,
+        'message' => 'Failed to update matter'
+      ]);
+    }
+
+    // berhasil update matter
+    $this->response([
+      'status' => TRUE,
+      'message' => 'Succesfully updated matter'
+    ]);
+  }
 }
+
+
 
 ?>
