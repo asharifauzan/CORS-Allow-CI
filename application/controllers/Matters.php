@@ -16,7 +16,7 @@ class Matters extends Token {
     if(!$data) {
       $this->response([
         'status' => FALSE,
-        'message' => 'Cannot get matters'
+        'message' => 'Failed to get matters'
       ], 400);
     }
 
@@ -37,7 +37,7 @@ class Matters extends Token {
       $form_error = $this->form_validation->error_array();
       $this->response([
         'status' => FALSE,
-        'message' => 'Failed to added matter',
+        'message' => 'form tidak lengkap',
         'error' => ['form_error' => $form_error]
       ], 400);
     }
