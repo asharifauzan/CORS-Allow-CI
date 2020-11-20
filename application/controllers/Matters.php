@@ -86,6 +86,22 @@ class Matters extends Token {
 
     return $this->upload->data()['file_name'];
   }
+
+  public function index_delete($id) {
+    // jika gagal delete matter
+    if( !$this->m_matters->deleteMatter($id) ){
+      $this->response([
+        'status' => FALSE,
+        'message' => 'Failed to deleted matter'
+      ]);
+    }
+
+    // sukses delete matter
+    $this->response([
+      'status' => TRUE,
+      'message' => 'Succesfully deleted matter'
+    ]);
+  }
 }
 
 ?>

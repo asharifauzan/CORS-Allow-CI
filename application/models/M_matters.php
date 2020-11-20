@@ -15,6 +15,11 @@ class M_matters extends CI_Model {
     return $this->db->affected_rows();
   }
 
+  public function deleteMatter($id) {
+    $this->db->delete('matters', ['id' => $id]);
+    return $this->db->affected_rows();
+  }
+
 }
 
 ?>
