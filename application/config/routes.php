@@ -69,8 +69,9 @@ $route['class/(:num)'] = 'classes/$1';
 $route['courses']        = 'courses';
 $route['courses/(:num)'] = 'courses/$1';
 
-$route['matters']        = 'matters';
-$route['matters/(:num)'] = 'matters/$1';
+$route['matters']                = 'matters';
+$route['matters/(:num)']['GET']  = 'matters/$1';
+$route['matters/(:num)']['POST'] = 'matters/update/$1';
 
 $route['(:any)']['GET']                = 'users/$1'; // get all users
 $route['(:any)/(:num)']['POST']        = 'users/update/$1/$2'; // update users
