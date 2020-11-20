@@ -10,6 +10,11 @@ class M_matters extends CI_Model {
     return $this->db->get('matters')->result_array();
   }
 
+  public function addMatter($data) {
+    $this->db->insert('matters', $data);
+    return $this->db->affected_rows();
+  }
+
 }
 
 ?>
