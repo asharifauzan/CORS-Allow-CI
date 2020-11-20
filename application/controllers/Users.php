@@ -7,10 +7,21 @@ class Users extends Token {
 
   public function __construct() {
     parent::__construct();
+    $this->filterURI();
     parent::authToken();
     $this->load->model('M_users', 'user');
     $this->load->library('form_validation');
-    $this->load->helper('string');
+    $this->load->helper(['string', 'url']);
+  }
+
+  // URI-1 harus mahasiswa | dosen
+  public function filterURI() {
+    $URI1 = $this->uri->segment(1);
+    if ($URI1 == 'mahasiswa' OR $URI1 == 'dosen') {
+      return;
+    }
+
+    show_404();
   }
 
   public function index_get($role, $id = null, $course = null) {

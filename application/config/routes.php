@@ -69,7 +69,11 @@ $route['class/(:num)'] = 'classes/$1';
 $route['courses']        = 'courses';
 $route['courses/(:num)'] = 'courses/$1';
 
-$route['(:any)']                = 'users/$1';
-$route['(:any)/(:num)']['POST'] = 'users/update/$1/$2';
-$route['(:any)/(:num)']['GET']  = 'users/$1/$2';
-$route['(:any)/(:num)/(:any)']  = 'users/$1/$2/$3';
+$route['matters']                = 'matters';
+$route['matters/(:num)']['GET']  = 'matters/$1';
+$route['matters/(:num)']['POST'] = 'matters/update/$1';
+
+$route['(:any)']['GET']                = 'users/$1'; // get all users
+$route['(:any)/(:num)']['POST']        = 'users/update/$1/$2'; // update users
+$route['(:any)/(:num)']['GET']         = 'users/$1/$2'; // get user by ID
+$route['(:any)/(:num)/(:any)']['GET']  = 'users/$1/$2/$3'; // get user with their courses
