@@ -8,6 +8,7 @@ class Matters extends Token {
     parent::__construct();
     $this->load->library('form_validation');
     $this->load->model('m_matters');
+    $this->load->helper('file');
   }
 
   public function index_get($id = NULL) {
@@ -53,6 +54,7 @@ class Matters extends Token {
 
     // jika gagal menambah matter
     if( !$this->m_matters->addMatter($data) ){
+      unlink('assets/matters/'.$data['filename']);
       $this->response([
         'status' => FALSE,
         'message'=> 'Failed to added matter'
@@ -133,6 +135,10 @@ class Matters extends Token {
 
     // jika gagal update matter
     if ( !$this->m_matters->updateMatter($data, $id) ) {
+      if($data['filename']) {
+        unlink('assets/matters/'.$data['filename']);
+      }
+      echo $this->db->last_query();
       $this->response([
         'status' => FALSE,
         'message' => 'Failed to update matter'
