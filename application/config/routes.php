@@ -74,6 +74,11 @@ $route['matters/(:num)']['GET']  = 'matters/$1';
 $route['matters/(:num)']['POST'] = 'matters/update/$1';
 
 $route['(:any)']['GET']                = 'users/$1'; // get all users
-$route['(:any)/(:num)']['POST']        = 'users/update/$1/$2'; // update users
+$route['(:any)']['POST']               = 'users/$1'; // add user
+$route['(:any)/(:num)']['DELETE']      = 'users/$1/$2'; // delete user
+$route['(:any)/(:num)']['POST']        = 'users/update/$1/$2'; // update user
 $route['(:any)/(:num)']['GET']         = 'users/$1/$2'; // get user by ID
-$route['(:any)/(:num)/(:any)']['GET']  = 'users/$1/$2/$3'; // get user with their courses
+// get user with their courses
+$route['(:any)/(:any)/(:num)']['GET']  = function($role, $id, $course) {
+  return "users/$role/$course/$id";
+};
