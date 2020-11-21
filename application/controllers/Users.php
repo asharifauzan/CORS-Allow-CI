@@ -144,6 +144,20 @@ class Users extends Token {
   }
 
   public function update_post($role, $id) {
+    // ---KHUSUS DOSEN & ADMIN ---
+    // validasi memastikan user yang
+    // akan diupdate adalah dirinya
+    $user_token = parent::getToken()[1];
+    $user       = parent::decodeToken($user_token);
+    if ($user->type !== 'admin') {
+      if ($user->id !== $id OR $user->type !== $role) {
+        $this->response([
+          'status' => FALSE,
+          'message' => "Gagal update $role"
+        ], 400);
+      }
+    }
+    
     // set rules validation
     $this->form_validation->set_rules('name', 'name', 'required');
     $this->form_validation->set_rules('email', 'email', 'required|valid_email');
@@ -172,20 +186,6 @@ class Users extends Token {
       'address'   => $this->post('address'),
       'gender'    => $this->post('gender')
     ];
-    
-    // ---KHUSUS DOSEN & ADMIN ---
-    // validasi memastikan user yang
-    // akan diupdate adalah dirinya
-    $user_token = parent::getToken()[1];
-    $user       = parent::decodeToken($user_token);
-    if ($user->type !== 'admin') {
-      if ($user->id !== $id OR $user->type !== $role) {
-        $this->response([
-          'status' => FALSE,
-          'message' => "Gagal update $role"
-        ], 400);
-      }
-    }
 
     // jika picture juga diedit
     if($_FILES){
