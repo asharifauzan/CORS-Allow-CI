@@ -11,7 +11,7 @@ class Users extends Token {
     parent::authToken();
     $this->load->model('M_users', 'user');
     $this->load->library('form_validation');
-    $this->load->helper(['string', 'url']);
+    $this->load->helper('file');
   }
 
   // URI-1 harus mahasiswa | dosen
@@ -87,9 +87,9 @@ class Users extends Token {
       'id_type'   => $this->user->getIdType($role),
     ];
 
-
     // jika query addUser gagal
     if( !$this->user->addUser($data) ) {
+      unlink('assets/img'.$data['picture']);
       $this->response([
         'status' => FALSE,
         'message' => "Gagal menambah $role"
@@ -172,12 +172,7 @@ class Users extends Token {
       'address'   => $this->post('address'),
       'gender'    => $this->post('gender')
     ];
-
-    // jika picture juga diedit
-    if($_FILES){
-      $data['picture'] = $this->do_upload();
-    }
-
+    
     // ---KHUSUS DOSEN & ADMIN ---
     // validasi memastikan user yang
     // akan diupdate adalah dirinya
@@ -192,8 +187,16 @@ class Users extends Token {
       }
     }
 
+    // jika picture juga diedit
+    if($_FILES){
+      $data['picture'] = $this->do_upload();
+    }
+
     // jika query updateUser gagal
     if( !$this->user->updateUser($id, $data) ) {
+      if ($data['picture']) {
+        unlink('assets/img'.$data['picture']);
+      }
       $this->response([
         'status' => FALSE,
         'message' => "Gagal update $role"
