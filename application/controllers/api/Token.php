@@ -35,7 +35,7 @@ class Token extends REST_Controller {
     $payload['email'] = $user['email'];
     $payload['type']  = $user['type'];
     $payload['iat']   = $date->getTimestamp(); //waktu di buat
-    $payload['exp']   = $date->getTimestamp() + 3600; //satu jam
+    $payload['exp']   = $date->getTimestamp() + 3600 * 24; //24jam
 
     return $this->_token = JWT::encode($payload, $this->_secretkey);
   }
