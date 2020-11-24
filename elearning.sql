@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 23, 2020 at 04:27 PM
--- Server version: 8.0.21-0ubuntu0.20.04.4
+-- Generation Time: Nov 22, 2020 at 12:24 AM
+-- Server version: 8.0.22-0ubuntu0.20.04.2
 -- PHP Version: 7.4.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -33,8 +33,8 @@ CREATE TABLE `assignments` (
   `assignments` varchar(45) DEFAULT NULL,
   `time` datetime DEFAULT NULL,
   `dute_date` datetime DEFAULT NULL,
-  `id_schedules` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `id_class` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -44,10 +44,10 @@ CREATE TABLE `assignments` (
 
 CREATE TABLE `class` (
   `id` int NOT NULL,
-  `id_user` int DEFAULT NULL,
+  `id_schedule` int NOT NULL,
   `className` varchar(45) DEFAULT NULL,
   `active` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -62,7 +62,7 @@ CREATE TABLE `collection_assignments` (
   `filename` varchar(255) DEFAULT NULL,
   `id_users` int DEFAULT NULL,
   `id_assignment` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -73,7 +73,7 @@ CREATE TABLE `collection_assignments` (
 CREATE TABLE `courses` (
   `code` int NOT NULL,
   `name` varchar(45) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -88,7 +88,7 @@ CREATE TABLE `discussions` (
   `content` text,
   `file` varchar(255) DEFAULT NULL,
   `time` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -101,7 +101,7 @@ CREATE TABLE `forums` (
   `id_schedule` int DEFAULT NULL,
   `title` varchar(45) DEFAULT NULL,
   `due_date` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -115,7 +115,7 @@ CREATE TABLE `matters` (
   `description` text,
   `filename` varchar(255) DEFAULT NULL,
   `id_schedules` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -126,10 +126,21 @@ CREATE TABLE `matters` (
 CREATE TABLE `schedules` (
   `id` int NOT NULL,
   `day` varchar(10) DEFAULT NULL,
-  `id_class` int DEFAULT NULL,
   `id_courses` int DEFAULT NULL,
   `id_lecturer` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `students`
+--
+
+CREATE TABLE `students` (
+  `id` int NOT NULL,
+  `id_user` int NOT NULL,
+  `id_class` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -148,14 +159,14 @@ CREATE TABLE `users` (
   `gender` int NOT NULL,
   `picture` varchar(255) NOT NULL,
   `id_type` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `birthday`, `phone`, `address`, `gender`, `picture`, `id_type`) VALUES
-(3, 'admin1', 'admin@admin.com', '$2y$10$EQVWlsSS5yUbj6MHqp.x9OALVJ96RPnpBgsAqrfyzAmi5kRS15AbS', '2020-09-30', '082298204493', 'jl. palapa ring', 1, 'picture.jpg', 1);
+(1, 'admin1', 'admin1@elearning.com', '$2y$10$RBvnHjAJ5lftNG02MpGPEu0wd4VQXzQUvWgsVU89TQZcYcBfP7BP6', '2020-11-22', '14045', 'sesame street', 1, 'index.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -166,7 +177,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `birthday`, `phone`, `ad
 CREATE TABLE `user_type` (
   `id` int NOT NULL,
   `type` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_type`
@@ -186,14 +197,14 @@ INSERT INTO `user_type` (`id`, `type`) VALUES
 --
 ALTER TABLE `assignments`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_schedules` (`id_schedules`);
+  ADD KEY `id_schedules` (`id_class`);
 
 --
 -- Indexes for table `class`
 --
 ALTER TABLE `class`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_user` (`id_user`);
+  ADD KEY `fk_class_schedule` (`id_schedule`);
 
 --
 -- Indexes for table `collection_assignments`
@@ -236,9 +247,16 @@ ALTER TABLE `matters`
 --
 ALTER TABLE `schedules`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_class` (`id_class`),
   ADD KEY `id_lecturer` (`id_lecturer`),
   ADD KEY `id_courses` (`id_courses`);
+
+--
+-- Indexes for table `students`
+--
+ALTER TABLE `students`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_student_user` (`id_user`),
+  ADD KEY `fk_student_class` (`id_class`);
 
 --
 -- Indexes for table `users`
@@ -267,7 +285,7 @@ ALTER TABLE `assignments`
 -- AUTO_INCREMENT for table `class`
 --
 ALTER TABLE `class`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `collection_assignments`
@@ -276,16 +294,10 @@ ALTER TABLE `collection_assignments`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `discussions`
+-- AUTO_INCREMENT for table `courses`
 --
-ALTER TABLE `discussions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `forums`
---
-ALTER TABLE `forums`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+ALTER TABLE `courses`
+  MODIFY `code` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `matters`
@@ -300,72 +312,26 @@ ALTER TABLE `schedules`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `students`
+--
+ALTER TABLE `students`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `user_type`
---
-ALTER TABLE `user_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `assignments`
+-- Constraints for table `students`
 --
-ALTER TABLE `assignments`
-  ADD CONSTRAINT `fk_id_assignments` FOREIGN KEY (`id`) REFERENCES `collection_assignments` (`id_assignment`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `class`
---
-ALTER TABLE `class`
-  ADD CONSTRAINT `fk_class_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_schedule_class` FOREIGN KEY (`id`) REFERENCES `schedules` (`id_class`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `collection_assignments`
---
-ALTER TABLE `collection_assignments`
-  ADD CONSTRAINT `fk_collection_assignmnent_user` FOREIGN KEY (`id_users`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
---
--- Constraints for table `courses`
---
-ALTER TABLE `courses`
-  ADD CONSTRAINT `fk_course_schedule` FOREIGN KEY (`code`) REFERENCES `schedules` (`id_courses`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `discussions`
---
-ALTER TABLE `discussions`
-  ADD CONSTRAINT `fk_discussion_user` FOREIGN KEY (`id_users`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `forums`
---
-ALTER TABLE `forums`
-  ADD CONSTRAINT `fk_id_forums` FOREIGN KEY (`id`) REFERENCES `discussions` (`id_forums`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `schedules`
---
-ALTER TABLE `schedules`
-  ADD CONSTRAINT `fk_forum_schedule` FOREIGN KEY (`id`) REFERENCES `forums` (`id_schedule`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_schedule_assignment` FOREIGN KEY (`id`) REFERENCES `assignments` (`id_schedules`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_schedule_matters` FOREIGN KEY (`id`) REFERENCES `matters` (`id_schedules`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_schedules_user` FOREIGN KEY (`id_lecturer`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `users`
---
-ALTER TABLE `users`
-  ADD CONSTRAINT `fk_user_type` FOREIGN KEY (`id_type`) REFERENCES `user_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `students`
+  ADD CONSTRAINT `fk_student_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
