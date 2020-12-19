@@ -90,6 +90,7 @@ class Matters extends Token {
   }
 
   public function index_delete($id) {
+    // var_dump($id); die();
     // jika gagal delete matter
     if( !$this->m_matters->deleteMatter($id) ){
       $this->response([

@@ -72,6 +72,7 @@ $route['courses/(:num)'] = 'courses/$1';
 $route['matters']                = 'matters';
 $route['matters/(:num)']['GET']  = 'matters/$1';
 $route['matters/(:num)']['POST'] = 'matters/update/$1';
+$route['matters/(:num)']['DELETE'] = 'matters/$1';
 
 $route['(:any)']['GET']                = 'users/$1'; // get all users
 $route['(:any)']['POST']               = 'users/$1'; // add user

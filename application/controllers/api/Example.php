@@ -23,6 +23,8 @@ class Example extends REST_Controller {
 
     function __construct()
     {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Credentials: *');
         // Construct the parent class
         parent::__construct();
 
