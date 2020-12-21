@@ -21,9 +21,11 @@ require APPPATH . 'libraries/Format.php';
  */
 class Example extends REST_Controller {
 
-    function __construct()
+    function __construct($config = 'rest')
     {
         header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
+        header('Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding');
         header('Access-Control-Allow-Credentials: *');
         // Construct the parent class
         parent::__construct();
